@@ -114,7 +114,7 @@ def train_rewardmodel(config):
                 optimizer.zero_grad()
                 local_step = 0
                 global_step += 1
-            print(f"key: {model.state_dict()}")
+            print(f"key: {model.state_dict().keys()}")
 
             if global_step % restore_step == 1:
                 # save model
