@@ -2,8 +2,8 @@
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 import torch
-import torch.optim.adamw as AdamWeightDecayOptimizer
-import torch.optim.sgd as SGD
+from torch.optim import adamw as AdamWeightDecayOptimizer
+from torch.optim import sgd as SGD
 import logging
 
 from utils import dataprocess
