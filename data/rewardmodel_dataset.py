@@ -43,8 +43,8 @@ class RW_Dataset(Dataset):
         oridata_list = []
 
         for data in batch:
-            chosen_text = data["query"] + data["response"]
-            reject_text = data["query"] + data["rejected_response"]
+            chosen_text = data["query"] + "输出是："+data["response"]
+            reject_text = data["query"] + "输出是：" + data["rejected_response"]
             print(f"chosen_text: {chosen_text}")
             print(f"reject_text: {reject_text}")
             chosen_list.append(self.__encode_token__(chosen_text)["input_ids"])
