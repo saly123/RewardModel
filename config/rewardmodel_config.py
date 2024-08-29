@@ -10,8 +10,8 @@ class RewardModel_Config(object):
         self.learning_rate = None
         self.per_device_train_batch_size = 1
         self.per_device_eval_batch_size = 1
-        self.traindata_path = ""
-        self.evaldata_path = ""
+        self.traindata_path = "/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl"
+        self.evaldata_path = "/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl"
         self.global_step = 100
         self.use_cuda = False
         self.optimizer_method = "AdamWeightDecayOptimizer"
