@@ -8,11 +8,11 @@ class RewardModel_Config(object):
         self.specidal_tokens = ""
         self.tokenizer = None
         self.learning_rate = 5e-5
-        self.per_device_train_batch_size = 1
-        self.per_device_eval_batch_size = 1
+        self.per_device_train_batch_size = 4
+        self.per_device_eval_batch_size = 4
         self.traindata_path = "/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl"
         self.evaldata_path = "/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl"
-        self.global_step = 100
+        self.global_step = 3000
         self.use_cuda = False
         self.optimizer_method = "AdamWeightDecayOptimizer"
         self.weigth_decay_rate = 0.01
