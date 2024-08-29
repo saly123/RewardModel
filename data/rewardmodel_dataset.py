@@ -45,6 +45,8 @@ class RW_Dataset(Dataset):
         for data in batch:
             chosen_text = data["query"] + data["response"]
             reject_text = data["query"] + data["rejected_response"]
+            print(f"chosen_text: {chosen_text}")
+            print(f"reject_text: {reject_text}")
             chosen_list.append(self.__encode_token__(chosen_text)["input_ids"])
             chosen_attention_mask.append(self.__encode_token__(chosen_text)["attention_mask"])
 
