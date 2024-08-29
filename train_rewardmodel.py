@@ -102,8 +102,8 @@ def train_rewardmodel(config):
 
 
 if __name__ == '__main__':
-    import os
-    os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
+    # import os
+    # os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
     parsed_arguments = parser.parse_args()
     config = parsed_arguments.init_from_parsed_args(parsed_arguments)
     train_rewardmodel(config)
