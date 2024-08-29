@@ -38,6 +38,8 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
 
         logging.info(
             f"===============eval data, global step: {global_step}, eval data size: {eval_num}, eval data loss: {eval_loss / eval_num}, eval data acc: {eval_acc / eval_num}")
+        print(
+            f"===============eval data, global step: {global_step}, eval data size: {eval_num}, eval data loss: {eval_loss / eval_num}, eval data acc: {eval_acc / eval_num}")
 
 
 def train_rewardmodel(config):
@@ -102,6 +104,8 @@ def train_rewardmodel(config):
             train_acc = result["acc"]
 
             logging.info(
+                f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
+            print(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
             if global_step % evaluate_step == 0:
