@@ -17,6 +17,7 @@ class RewardModel_Config(object):
         self.optimizer_method = "AdamWeightDecayOptimizer"
         self.weigth_decay_rate = 0.01
         self.device = "cpu"
+        self.max_length = 4096
 
     @classmethod
     def init_from_parsed_args(cls, parsed_args):

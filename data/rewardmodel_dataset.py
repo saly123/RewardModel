@@ -3,10 +3,10 @@ import torch
 
 
 class RW_Dataset(Dataset):
-    def __init__(self, data, tokenizer, config, max_length=2048, truncation=True, padding="max_length"):
+    def __init__(self, data, tokenizer, config, truncation=True, padding="max_length"):
         self.data = data
         self.tokenizer = tokenizer
-        self.max_length = max_length
+        self.max_length = config.max_length
         self.truncation = truncation
         self.padding = padding
         self.config = config
