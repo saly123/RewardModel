@@ -16,7 +16,7 @@ from optim.sgd import SGD
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
     eval_data = dataprocess.load_data(config.traindata_path)
-    eval_dataset = RW_Dataset(eval_data, tokenizer)
+    eval_dataset = RW_Dataset(eval_data, tokenizer, config)
     eval_datasampler = RandomSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,
                                  batch_size=config.per_device_train_batch_size,
@@ -85,7 +85,7 @@ def train_rewardmodel(config):
     train_cnt = 0
 
     while global_step < config.global_step:
-        train_dataset = RW_Dataset(traindata, tokenizer)
+        train_dataset = RW_Dataset(traindata, tokenizer, config)
         train_datasampler = RandomSampler(train_dataset)
         train_dataloader = DataLoader(train_dataset, sampler=train_datasampler,
                                       batch_size=config.per_device_train_batch_size,
