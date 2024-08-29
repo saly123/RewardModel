@@ -109,7 +109,7 @@ def train_rewardmodel(config):
             print(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
-            if local_step % config.gradient_accumulation_steps == 0:
+            if local_step % config.gradient_accumulation_steps == 1:
                 optimizer.step()
                 optimizer.zero_grad()
                 local_step = 0
