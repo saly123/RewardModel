@@ -2,8 +2,6 @@
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 import torch
-# from torch.optim import adamw as AdamWeightDecayOptimizer
-# from torch.optim import sgd as SGD
 import logging
 
 from utils import dataprocess
@@ -14,10 +12,6 @@ from data.rewardmodel_dataset import RW_Dataset
 from torch.utils.data import RandomSampler, DataLoader
 from optim.adamw import AdamWeightDecayOptimizer
 from optim.sgd import SGD
-
-
-# from optim.adamw import AdamWeightDecayOptimizer
-# from optim.sgd import SGD
 
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
