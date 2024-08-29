@@ -10,3 +10,5 @@ parser.add_argument("--evaldata_path", type=str, default="/home/powerop/work/bus
 parser.add_argument("--global_step", type=int, default=100)
 parser.add_argument("--use_cuda", type=bool, default=False)
 parser.add_argument("--optimizer_method", type=str, default="AdamWeightDecayOptimizer")
+parser.add_argument("--weigth_decay_rate", type=float, default=0.01)
+

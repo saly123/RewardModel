@@ -2,8 +2,8 @@
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 import torch
-from torch.optim import adamw as AdamWeightDecayOptimizer
-from torch.optim import sgd as SGD
+# from torch.optim import adamw as AdamWeightDecayOptimizer
+# from torch.optim import sgd as SGD
 import logging
 
 from utils import dataprocess
@@ -12,7 +12,8 @@ from model.rewardmodel import RewardModel
 from config.rewardmodel_config import RewardModel_Config
 from data.rewardmodel_dataset import RW_Dataset
 from torch.utils.data import RandomSampler, DataLoader
-
+from optim.adamw import AdamWeightDecayOptimizer
+from optim.sgd import SGD
 
 
 # from optim.adamw import AdamWeightDecayOptimizer
@@ -52,26 +53,36 @@ def train_rewardmodel(config):
     model = AutoModel.from_pretrained(config.model_path)
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     model.to(device)
-    rewardmodel = RewardModel(tokenizer,model)
+    rewardmodel = RewardModel(tokenizer, model)
     rewardmodel.to(device)
 
+    global_step = 0
+    restore_step = 0
+
     params = rewardmodel.named_parameters()
+    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
     # freeze part of parameters
     # just train last MLP ==> reward_model.weight
-    for name, param in rewardmodel.named_parameters():
+    for name, param in params:
         if name != "reward_model.weight":
             param.requires_grad = False
 
+    optimizer_grouped_parameters = [
+        {'params': [p for n, p in params if
+                    not any(nd in n for nd in no_decay)],
+         'weight_decay': config.weigth_decay_rate},
+        {'params': [p for n, p in params if any(nd in n for nd in no_decay)],
+         'weight_decay': 0.0}
+    ]
+
     if config.optimizer_method == "AdamWeightDecayOptimizer":
         # AdamW
-        optimizer = AdamWeightDecayOptimizer(params, lr=config.learning_rate)
+        optimizer = AdamWeightDecayOptimizer(optimizer_grouped_parameters, lr=config.learning_rate)
 
     else:
         # SGD
         optimizer = SGD(params, lr=config.learning_rate)
 
-    global_step = 0
-    restore_step = 0
     rewardmodel.train()
     optimizer.zero_grad()
 

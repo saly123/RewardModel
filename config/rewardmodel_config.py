@@ -15,6 +15,7 @@ class RewardModel_Config(object):
         self.global_step = 100
         self.use_cuda = False
         self.optimizer_method = "AdamWeightDecayOptimizer"
+        self.weigth_decay_rate = 0.01
 
     @classmethod
     def init_from_parsed_args(cls, parsed_args):
