@@ -114,11 +114,11 @@ def train_rewardmodel(config):
                 optimizer.zero_grad()
                 local_step = 0
                 global_step += 1
-            print(f"key: {model.state_dict().keys()}")
+            # print(f"key: {rewardmodel.state_dict().keys()}")
 
             if global_step % restore_step == 1:
                 # save model
-                save_model_partweight(config.output_dir, model, weight_key="reward_model.weight",
+                save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
