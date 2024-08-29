@@ -31,7 +31,6 @@ class RW_Dataset(Dataset):
             'attention_mask': inputs.attention_mask
         }
 
-跑
     def __convert_inputid(self,chosen_list,reject_list,chosen_attention_mask,reject_attention_mask):
         bts = len(chosen_list)
         for i in range(bts):
