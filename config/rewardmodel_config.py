@@ -7,7 +7,7 @@ class RewardModel_Config(object):
         self.base_model = None
         self.specidal_tokens = ""
         self.tokenizer = None
-        self.learning_rate = None
+        self.learning_rate = 5e-5
         self.per_device_train_batch_size = 1
         self.per_device_eval_batch_size = 1
         self.traindata_path = "/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl"

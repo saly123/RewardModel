@@ -1,7 +1,9 @@
 import json
 
 
-def read_json_data(data_path):
-    with open(data_path, "r") as f:
-        data = json.load(f)
-    return data
+def load_data(data_path):
+    res = []
+    with open(data_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            res.append(json.loads(line))
+    return res
