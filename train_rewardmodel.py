@@ -1,14 +1,18 @@
-from utils import dataprocess
-from config.arguments import parser
-from model.rewardmodel import RewardModel
-from transformers import AutoModel, AutoTokenizer
-from data.rewardmodel_dataset import RW_Dataset
-from torch.utils.data import RandomSampler, DataLoader
+# encoding: utf-8
 from tqdm import tqdm
+from transformers import AutoModel, AutoTokenizer
 import torch
 import torch.optim.adamw as AdamWeightDecayOptimizer
 import torch.optim.sgd as SGD
 import logging
+
+from utils import dataprocess
+from config.arguments import parser
+from model.rewardmodel import RewardModel
+
+from data.rewardmodel_dataset import RW_Dataset
+from torch.utils.data import RandomSampler, DataLoader
+
 
 
 # from optim.adamw import AdamWeightDecayOptimizer
