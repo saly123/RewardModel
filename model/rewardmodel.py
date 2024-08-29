@@ -77,10 +77,11 @@ class RewardModel(nn.Module):
             chosen_reward = chosen_rewards[i]
             rejected_reward = rejected_rewards[i]
             chosen_inds = (chosen_id == self.PAD_ID).nonzero()  # chosen内容中非padding的所有index
+            print(f'chosen_inds: {chosen_inds}')
             chosen_ind = chosen_inds[self.num_padding_at_begining].item() if len(
                 chosen_inds) > self.num_padding_at_begining else seq_len
-
-            check_divergence = (chosen_ind != rejected_id).nonzero()  # 找到不同的token的下标index
+            print(f'chosen_inds: {chosen_inds}')
+            check_divergence = (chosen_id != rejected_id).nonzero()  # 找到不同的token的下标index
 
             if len(check_divergence) == 0:
                 # 没有不同的token
