@@ -51,7 +51,7 @@ def train_rewardmodel(config):
     rewardmodel.to(device)
 
     global_step = 0
-    restore_step = 0
+    restore_step = 10
 
     params = rewardmodel.named_parameters()
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']

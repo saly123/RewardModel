@@ -31,6 +31,20 @@ class RW_Dataset(Dataset):
             'attention_mask': inputs.attention_mask
         }
 
+
+    def __convert_inputid(self,chosen_list,reject_list,chosen_attention_mask,reject_attention_mask):
+        bts = len(chosen_list)
+        for i in range(bts):
+            chosen_list[i] = chosen_list[i][:self.max_length]
+            reject_list[i] = reject_list[i][:self.max_length]
+            chosen_attention_mask[i] = chosen_attention_mask[i][:self.max_length]
+            reject_attention_mask[i] = reject_attention_mask[i][:self.max_length]
+
+
+        input_tensor = torch.cat((torch.as_tensor(chosen_list, dtype=torch.long), torch.as_tensor(reject_list, dtype=torch.long)), dim=0)
+        return input_tensor
+        
+
     def collate_wrapper(self, batch):
         '''
         :param batch: {"query":,"response","rejected_response"}
