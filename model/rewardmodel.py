@@ -41,6 +41,7 @@ class RewardModel(nn.Module):
         loss = None
         print(f'input_ids: {input_ids}')
         print(f'attention_mask: {attention_mask}')
+        print(input_ids[0] == input_ids[1])
 
         print(f'input_ids shape: {input_ids.shape}')
         print(f'attention_mask shape: {attention_mask.shape}')
