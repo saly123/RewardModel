@@ -39,6 +39,8 @@ class RewardModel(nn.Module):
 
         '''
         loss = None
+        print(f'input_ids: {input_ids}')
+        print(f'attention_mask: {attention_mask}')
         transformer_outputs = self.model(input_ids, attention_mask=attention_mask,
                                          inputs_embeds=inputs_embeds, use_cache=use_cache) # qwen2 model没有入参past_key_value
         # bts × seq_len × hidden_size
