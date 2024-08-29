@@ -11,7 +11,7 @@ class RewardModel_Config(object):
         self.traindata_path = ""
         self.evaldata_path =""
         self.global_step = 100
-        self.use_cuda = True
+        self.use_cuda = False
         self.optimizer_method = "AdamWeightDecayOptimizer"
 
     @classmethod
