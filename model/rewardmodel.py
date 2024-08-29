@@ -87,6 +87,12 @@ class RewardModel(nn.Module):
                     rejected_inds) > self.num_padding_at_begining else seq_len
                 end_ind = max(chosen_ind, rejected_ind)  # 取两个里面最大的结束位置作为实际的结束位置
                 divergence_ind = check_divergence[0]
+            print(f'check_divergence: {check_divergence}')
+            print(f'chosen_id : {chosen_id}')
+            print(f'rejected_id: {rejected_id}')
+
+            print(f'chosen_reward : {chosen_reward}')
+            print(f'rejected_reward: {rejected_reward}')
 
             assert divergence_ind > 0
 
