@@ -18,6 +18,11 @@ class RewardModel_Config(object):
         self.weigth_decay_rate = 0.01
         self.device = "cpu"
         self.max_length = 4096
+        self.output_dir = "/home/powerop/work/reward_model/rewardmodel_checkpoint"
+        self.file_name = "train_rewardmodel20240829"
+        self.max_save = 20
+        self.type = "model"
+
 
     @classmethod
     def init_from_parsed_args(cls, parsed_args):

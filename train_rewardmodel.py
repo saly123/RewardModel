@@ -12,6 +12,7 @@ from data.rewardmodel_dataset import RW_Dataset
 from torch.utils.data import RandomSampler, DataLoader
 from optim.adamw import AdamWeightDecayOptimizer
 from optim.sgd import SGD
+from utils.common_utils import save_model_partweight
 
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
@@ -51,7 +52,8 @@ def train_rewardmodel(config):
     rewardmodel.to(device)
 
     global_step = 0
-    restore_step = 10
+    restore_step = 50
+    evaluate_step = 50
 
     params = rewardmodel.named_parameters()
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -102,9 +104,17 @@ def train_rewardmodel(config):
             logging.info(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
-            if global_step % restore_step == 0:
+            if global_step % evaluate_step == 0:
                 # evaluate
                 evaluate_rewardmodel(config, rewardmodel, tokenizer)
+            if global_step % restore_step == 0:
+                # save model
+                save_model_partweight(config.output_dir, model, weight_key="reward_model.weight",
+                                      file_name=config.file_name + "_globalstep_"+ str(global_step) +"_acc_"+ str(train_acc) +"_cnt_" +str(train_cnt)+ ".pt",
+                                      metric= train_loss / train_cnt, max_save=config.max_save,
+                                      type=config.type)
+
+
 
 
 if __name__ == '__main__':

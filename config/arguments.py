@@ -14,3 +14,7 @@ parser.add_argument("--weigth_decay_rate", type=float, default=0.01)
 parser.add_argument("--device", type=str, default="cpu")
 parser.add_argument("--max_length", type=int, default=4096)
 
+parser.add_argument("--output_dir", type=str, default="")
+parser.add_argument("--file_name", type=str, default="")
+parser.add_argument("--max_save", type=int, default=20)
+parser.add_argument("--type", type=str, default="train")
