@@ -1,11 +1,10 @@
 import json
 class RewardModel_Config(object):
     def __init__(self):
-        self.model_path = ""
+        self.model_path = "/tmp/local/qwen/Qwen2-7B-Instruct"
         self.base_model = None
         self.specidal_tokens = ""
         self.tokenizer = None
-        self.model_path = ""
         self.learning_rate = None
         self.per_device_train_batch_size = 1
         self.per_device_eval_batch_size = 1

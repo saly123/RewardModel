@@ -98,6 +98,14 @@ def train_rewardmodel(config):
 
 
 if __name__ == '__main__':
+    import os
+    os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
     parsed_arguments = parser.parse_args()
     config = parsed_arguments.init_from_parsed_args(parsed_arguments)
-    train_rewardmodel(config)
+    # train_rewardmodel(config)
+    traindata = dataprocess.load_data(config.traindata_path)
+
+    device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
+    model = AutoModel.from_pretrained(config.model_path)
+    tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
+    model.to(device)
