@@ -71,6 +71,7 @@ class RewardModel(nn.Module):
 
         loss = 0.
         acc = 0
+        # 这部分可以挪到dataset中，collate中直接将truncate之后一样的删除掉！！
         for i in range(bs):
             chosen_id = chosen_ids[i]
             rejected_id = rejected_ids[i]

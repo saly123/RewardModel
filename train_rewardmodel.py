@@ -30,7 +30,7 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
         for batch in tqdm(eval_dataloader):
             result = reward_model(**batch)
             loss = result["loss"].item()
-            acc = result["acc"].item()
+            acc = result["acc"]
             eval_loss += loss
             eval_acc += acc
             eval_num += len(batch["input_ids"])
@@ -97,7 +97,7 @@ def train_rewardmodel(config):
             loss = result["loss"]
             loss.backward()
             train_loss += loss.item()
-            train_acc = result["acc"].item()
+            train_acc = result["acc"]
             global_step += 1
             logging.info(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
