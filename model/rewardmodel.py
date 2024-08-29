@@ -39,8 +39,8 @@ class RewardModel(nn.Module):
 
         '''
         loss = None
-        transformer_outputs = self.model(input_ids, past_key_value=past_key_value, attention_mask=attention_mask,
-                                         inputs_embeds=inputs_embeds, use_cache=use_cache)
+        transformer_outputs = self.model(input_ids, attention_mask=attention_mask,
+                                         inputs_embeds=inputs_embeds, use_cache=use_cache) # qwen2 model没有入参past_key_value
         # bts × seq_len × hidden_size
         hidden_states = transformer_outputs[0]  # 只取模型的hidden_states，past_key_value先不取
         # bts*seq_len*1 ==> bts*seq_len（每一个token都有一个reward值）
