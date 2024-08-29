@@ -80,7 +80,8 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
         except:
             logging.info(f'Failed to remove ckpt {file}.')
 
-    model_to_save = model.module if hasattr(model, 'module') else model
+    # model_to_save = model.module if hasattr(model, 'module') else model
+    model_to_save = model
     file_ckpt = os.path.join(output_dir, file_name)
     torch.save(model_to_save.state_dict()[weight_key], file_ckpt)
     file_lists.sort()
