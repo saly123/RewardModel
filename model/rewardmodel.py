@@ -2,7 +2,6 @@
 import torch.nn
 # 后续需要研究基于DPO或者是PPO的RLHF
 from torch import nn
-from transformers import AutoModel, AutoTokenizer
 import math
 
 
