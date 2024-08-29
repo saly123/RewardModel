@@ -100,21 +100,20 @@ def train_rewardmodel(config):
             loss.backward()
             train_loss += loss.item()
             train_acc = result["acc"]
-            global_step += 1
+
             logging.info(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
             if global_step % evaluate_step == 0:
                 # evaluate
-                evaluate_rewardmodel(config, rewardmodel, tokenizer)
+                evaluate_rewardmodel(config, rewardmodel, tokenizer, global_step)
             if global_step % restore_step == 0:
                 # save model
                 save_model_partweight(config.output_dir, model, weight_key="reward_model.weight",
-                                      file_name=config.file_name + "_globalstep_"+ str(global_step) +"_acc_"+ str(train_acc) +"_cnt_" +str(train_cnt)+ ".pt",
-                                      metric= train_loss / train_cnt, max_save=config.max_save,
-                                      type=config.type)
-
-
+                                      file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
+                                          train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
+                                      max_save=config.max_save, type=config.type)
+            global_step += 1
 
 
 if __name__ == '__main__':
