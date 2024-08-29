@@ -1,4 +1,6 @@
 import json
+
+
 class RewardModel_Config(object):
     def __init__(self):
         self.model_path = "/tmp/local/qwen/Qwen2-7B-Instruct"
@@ -9,7 +11,7 @@ class RewardModel_Config(object):
         self.per_device_train_batch_size = 1
         self.per_device_eval_batch_size = 1
         self.traindata_path = ""
-        self.evaldata_path =""
+        self.evaldata_path = ""
         self.global_step = 100
         self.use_cuda = False
         self.optimizer_method = "AdamWeightDecayOptimizer"

@@ -9,7 +9,7 @@ import logging
 from utils import dataprocess
 from config.arguments import parser
 from model.rewardmodel import RewardModel
-
+from config.rewardmodel_config import RewardModel_Config
 from data.rewardmodel_dataset import RW_Dataset
 from torch.utils.data import RandomSampler, DataLoader
 
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     # import os
     # os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
     parsed_arguments = parser.parse_args()
-    config = parsed_arguments.init_from_parsed_args(parsed_arguments)
+    config = RewardModel_Config.init_from_parsed_args(parsed_arguments)
     train_rewardmodel(config)
     # traindata = dataprocess.load_data(config.traindata_path)
     # 
