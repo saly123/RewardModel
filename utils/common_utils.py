@@ -63,6 +63,7 @@ def save_pytorch_model(output_dir, model, file_name, metric, max_save, type):
 
 def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_save, type):
     logging.info(f'** ** * Saving {type}: {file_name} * ** ** ')
+    print(f'save output_dir: {output_dir}')
     os.makedirs(output_dir, exist_ok=True)
     file_checkpoint = os.path.join(output_dir, type)
     if os.path.exists(file_checkpoint):
