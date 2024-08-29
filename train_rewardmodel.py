@@ -47,7 +47,7 @@ def train_rewardmodel(config):
 
     device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
     print(f"config.model_path: {config.model_path}")
-    model = AutoModel.from_pretrained(config.model_path)
+    model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     model.to(device)
     rewardmodel = RewardModel(tokenizer, model)
@@ -97,7 +97,7 @@ def train_rewardmodel(config):
                                       collate_fn=train_dataset.collate_wrapper)
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
-            train_cnt += len(batch["input_ids"])
+            train_cnt += len(batch["input_ids"])//2
             result = rewardmodel(**batch)
             loss = result["loss"]
             loss.backward()
