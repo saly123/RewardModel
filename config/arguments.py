@@ -11,4 +11,5 @@ parser.add_argument("--global_step", type=int, default=100)
 parser.add_argument("--use_cuda", type=bool, default=False)
 parser.add_argument("--optimizer_method", type=str, default="AdamWeightDecayOptimizer")
 parser.add_argument("--weigth_decay_rate", type=float, default=0.01)
+parser.add_argument("--device", type=str, default="cpu")
 
