@@ -87,6 +87,7 @@ def train_rewardmodel(config):
     train_loss = 0
     train_acc = 0
     train_cnt = 0
+    local_step = 0
 
     while global_step < config.global_step:
         train_dataset = RW_Dataset(traindata, tokenizer, config)
@@ -108,18 +109,22 @@ def train_rewardmodel(config):
             print(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
-            if global_step % restore_step == 0:
+            if local_step % config.gradient_accumulation_steps == 0:
+                optimizer.step()
+                optimizer.zero_grad()
+                local_step = 0
+                global_step += 1
+
+            if global_step % restore_step == 1:
                 # save model
                 save_model_partweight(config.output_dir, model, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
 
-            if global_step % evaluate_step == 0:
+            if global_step % evaluate_step == 1:
                 # evaluate
                 evaluate_rewardmodel(config, rewardmodel, tokenizer, global_step)
-
-            global_step += 1
 
 
 if __name__ == '__main__':

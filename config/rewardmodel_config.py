@@ -22,6 +22,7 @@ class RewardModel_Config(object):
         self.file_name = "train_rewardmodel20240829"
         self.max_save = 20
         self.type = "model"
+        self.gradient_accumulation_steps = 4
 
 
     @classmethod
