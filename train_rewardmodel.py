@@ -52,7 +52,7 @@ def train_rewardmodel(config):
     model = AutoModel.from_pretrained(config.model_path)
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     model.to(device)
-    rewardmodel = RewardModel(model, tokenizer)
+    rewardmodel = RewardModel(tokenizer,model)
     rewardmodel.to(device)
 
     params = rewardmodel.named_parameters()
@@ -108,9 +108,9 @@ if __name__ == '__main__':
     parsed_arguments = parser.parse_args()
     config = RewardModel_Config.init_from_parsed_args(parsed_arguments)
     print(f"config: {config.to_json_string()}")
-    import sys,transformers
-    print(sys.path)
-    print(transformers.__version__)
+    # import sys,transformers
+    # print(sys.path)
+    # print(transformers.__version__)
     train_rewardmodel(config)
     # traindata = dataprocess.load_data(config.traindata_path)
     # 
