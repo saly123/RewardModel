@@ -6,6 +6,7 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import auc
 from matplotlib import pyplot as plt
 from sklearn.metrics import precision_recall_curve
+from transformers import AutoModel, AutoTokenizer
 
 
 def restore_from_checkpoint(model, dir_checkpoint, strict=True, type='model'):
@@ -88,6 +89,25 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
     file_lists.append(file_ckpt+ ' ' + str(metric) + '\n')
     open(file_checkpoint, 'w').write(''.join(file_lists))
     
+
+def restore_partweight_from_checkpoint(model, config,  dir_checkpoint_pt):
+    state_dict = torch.load(dir_checkpoint_pt)
+    load_pt_key = "reward_model.weight"
+    basemodel = AutoModel.from_pretrained(config.model_path)
+    basemodel_weight = basemodel.state_dict()
+    model_statedict = model.state_dict()
+
+    for k,v in model_statedict.items():
+        if k == load_pt_key:
+            model_statedict[k] = state_dict
+        else:
+            model_statedict[k] = basemodel_weight[k]
+    model.load_state_dict(model_statedict)
+
+
+
+
+
 
 
 def generate_roc_curve(predict_outputs, labels):

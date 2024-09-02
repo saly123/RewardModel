@@ -103,6 +103,7 @@ def train_rewardmodel(config):
             loss.backward()
             train_loss += loss.item()
             train_acc = result["acc"]
+            local_step += 1
 
             logging.info(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
