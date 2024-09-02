@@ -64,11 +64,14 @@ class RW_Dataset(Dataset):
             # reject_text = data["rejected_response"]
             # print(f"chosen_text: {chosen_text}")
             # print(f"reject_text: {reject_text}")
+
+            encode_start = datetime.now()
             chosen_list.append(self.__encode_token__(chosen_text)["input_ids"])
             chosen_attention_mask.append(self.__encode_token__(chosen_text)["attention_mask"])
 
             reject_list.append(self.__encode_token__(reject_text)["input_ids"])
             reject_attention_mask.append(self.__encode_token__(reject_text)["attention_mask"])
+            print(f'single batch encode time: {datetime.now() - encode_start}')
 
         # tensor
 
