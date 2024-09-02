@@ -6,7 +6,7 @@ import math
 
 
 class RewardModel(nn.Module):
-    def __init__(self, tokenizer, basemodel, num_padding_at_begining=0, compute_fp32_loss=False):
+    def __init__(self, tokenizer, basemodel,config, num_padding_at_begining=0, compute_fp32_loss=False):
         '''
         tokenizer: model tokenizer
         basemodel: model(可以是任一transformer模型，会基于该base model的最后一层隐层输出计算reward)
@@ -18,7 +18,7 @@ class RewardModel(nn.Module):
         self.tokenizer = tokenizer
         self.model = basemodel
         print(f'base model device: {self.model.device}')
-        self.config = basemodel.config
+        self.config = config
         self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
         self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False).to(self.model.device)  # [bts, hidden_size] => [bts, 1]
