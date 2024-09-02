@@ -51,7 +51,6 @@ def train_rewardmodel(config):
     print(f"config.model_path: {config.model_path}")
     model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
-    tokenizer.to(device)
     model.to(device)
     rewardmodel = RewardModel(tokenizer, model)
     rewardmodel.to(device)
