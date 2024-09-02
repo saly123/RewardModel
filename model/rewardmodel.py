@@ -31,7 +31,7 @@ class RewardModel(nn.Module):
         self.model.gradient_checkpointing_disable()
 
     def forward(self, input_ids=None, past_key_value=None, attention_mask=None, position_ids=None, head_mask=None,
-                inputs_embeds=None, use_cache=True):
+                inputs_embeds=None, use_cache=False):
         '''
         past_key_value: 记录之前时间步的key和value，在处理较长序列或者是将模型应用到文本生成任务的时候，可以提高计算效率
         use_cache = True：等价于禁用gradient checkpoint
