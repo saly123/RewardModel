@@ -20,7 +20,7 @@ class RewardModel(nn.Module):
         self.config = basemodel.config
         self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
-        self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False)  # [bts, hidden_size] => [bts, 1]
+        self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False).to(self.model.device)  # [bts, hidden_size] => [bts, 1]
         self.PAD_ID = tokenizer.pad_token_id
 
     # gradient checkpointing：一种节省显存的训练方式[但是会增加时间]——根据策略将计算图上的一部分激活值保存，其余部分丢弃。被保存的那部分在反向传播的时候可以直接使用，被丢弃的那部分在反向传播的时候就需要重新计算激活值
@@ -31,11 +31,10 @@ class RewardModel(nn.Module):
         self.model.gradient_checkpointing_disable()
 
     def forward(self, input_ids=None, past_key_value=None, attention_mask=None, position_ids=None, head_mask=None,
-                inputs_embeds=None, use_cache=False):
+                inputs_embeds=None, use_cache=True):
         '''
         past_key_value: 记录之前时间步的key和value，在处理较长序列或者是将模型应用到文本生成任务的时候，可以提高计算效率
-
-
+        use_cache = True：等价于禁用gradient checkpoint
 
         '''
         loss = None
