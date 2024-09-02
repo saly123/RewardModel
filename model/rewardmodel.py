@@ -75,8 +75,8 @@ class RewardModel(nn.Module):
         for i in range(bs):
             chosen_id = chosen_ids[i]
             rejected_id = rejected_ids[i]
-            print(f"chosen id: {chosen_id}")
-            print(f"reject id: {rejected_id}")
+            # print(f"chosen id: {chosen_id}")
+            # print(f"reject id: {rejected_id}")
 
             chosen_reward = chosen_rewards[i]
             rejected_reward = rejected_rewards[i]

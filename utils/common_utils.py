@@ -62,6 +62,7 @@ def save_pytorch_model(output_dir, model, file_name, metric, max_save, type):
     file_lists.append(file_ckpt + ' ' + str(metric) + '\n')
     open(file_checkpoint, 'w').write(''.join(file_lists))
 
+
 def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_save, type):
     logging.info(f'** ** * Saving {type}: {file_name} * ** ** ')
     print(f'save output_dir: {output_dir}')
@@ -86,28 +87,23 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
     file_ckpt = os.path.join(output_dir, file_name)
     torch.save(model_to_save.state_dict()[weight_key], file_ckpt)
     file_lists.sort()
-    file_lists.append(file_ckpt+ ' ' + str(metric) + '\n')
+    file_lists.append(file_ckpt + ' ' + str(metric) + '\n')
     open(file_checkpoint, 'w').write(''.join(file_lists))
-    
 
-def restore_partweight_from_checkpoint(model, config,  dir_checkpoint_pt):
+
+def restore_partweight_from_checkpoint(model, config, dir_checkpoint_pt):
     state_dict = torch.load(dir_checkpoint_pt)
     load_pt_key = "reward_model.weight"
     basemodel = AutoModel.from_pretrained(config.model_path)
     basemodel_weight = basemodel.state_dict()
     model_statedict = model.state_dict()
 
-    for k,v in model_statedict.items():
+    for k, v in model_statedict.items():
         if k == load_pt_key:
             model_statedict[k] = state_dict
         else:
-            model_statedict[k] = basemodel_weight[k.replace("model.","")]
+            model_statedict[k] = basemodel_weight[k.replace("model.", "")]
     model.load_state_dict(model_statedict)
-
-
-
-
-
 
 
 def generate_roc_curve(predict_outputs, labels):
