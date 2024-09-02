@@ -18,7 +18,7 @@ class RewardModel(nn.Module):
         self.tokenizer = tokenizer
         self.model = basemodel
         self.config = basemodel.config
-        self.num_padding_at_begining = num_padding_at_begining
+        self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
         self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False)  # [bts, hidden_size] => [bts, 1]
         self.PAD_ID = tokenizer.pad_token_id
@@ -46,9 +46,9 @@ class RewardModel(nn.Module):
         # print(f'input_ids shape: {input_ids.shape}')
         # print(f'attention_mask shape: {attention_mask.shape}')
 
-
         transformer_outputs = self.model(input_ids, attention_mask=attention_mask,
-                                         inputs_embeds=inputs_embeds, use_cache=use_cache) # qwen2 model没有入参past_key_value
+                                         inputs_embeds=inputs_embeds,
+                                         use_cache=use_cache)  # qwen2 model没有入参past_key_value
         # bts × seq_len × hidden_size
         hidden_states = transformer_outputs[0]  # 只取模型的hidden_states，past_key_value先不取
         # bts*seq_len*1 ==> bts*seq_len（每一个token都有一个reward值）
@@ -80,16 +80,16 @@ class RewardModel(nn.Module):
 
             chosen_reward = chosen_rewards[i]
             rejected_reward = rejected_rewards[i]
-            chosen_inds = (chosen_id == self.PAD_ID).nonzero()  # chosen内容中非padding的所有index
+            chosen_inds = (chosen_id == self.PAD_ID).nonzero()  # chosen内容中padding的所有index
             # print(f'chosen_inds: {chosen_inds}')
             chosen_ind = chosen_inds[self.num_padding_at_begining].item() if len(
-                chosen_inds) > self.num_padding_at_begining else seq_len
+                chosen_inds) > self.num_padding_at_begining else seq_len  # chosen中剔除开头默认的padding，之后的第一个padding位置——表示句子结束
             # print(f'chosen_inds: {chosen_inds}')
             check_divergence = (chosen_id != rejected_id).nonzero()  # 找到不同的token的下标index
 
             if len(check_divergence) == 0:
                 # 没有不同的token
-                rejected_ind = chosen_ind
+                rejected_ind = chosen_ind  # 第一个非padding的tokenid
                 end_ind = rejected_reward.shape[-1]
                 divergence_ind = end_ind - 1
 
@@ -97,9 +97,10 @@ class RewardModel(nn.Module):
                 # 剔除由padding导致的不同token
                 rejected_inds = (rejected_id == self.PAD_ID).nonzero()
                 rejected_ind = rejected_inds[self.num_padding_at_begining].item() if len(
-                    rejected_inds) > self.num_padding_at_begining else seq_len
+                    rejected_inds) > self.num_padding_at_begining else seq_len  # reject中非开头默认的padding，后面的第一个padding（表示到句子结束）
                 end_ind = max(chosen_ind, rejected_ind)  # 取两个里面最大的结束位置作为实际的结束位置
-                divergence_ind = check_divergence[0]
+                divergence_ind = check_divergence[0]  # 开始不一样的index
+
             # print(f'check_divergence: {check_divergence}')
             # print(f'chosen_id : {chosen_id}')
             # print(f'rejected_id: {rejected_id}')
@@ -111,7 +112,7 @@ class RewardModel(nn.Module):
 
             # 开始计算chosen_reward和rejected_reward不相同部分的loss
 
-            used_chosen_r = chosen_reward[divergence_ind:end_ind]  # 每个token一个reward value
+            used_chosen_r = chosen_reward[divergence_ind:end_ind]  # 每个token一个reward value，长度不一样的padding也算在内
             used_rejected_r = rejected_reward[divergence_ind:end_ind]
 
             chosen_mean_score.append(chosen_reward[chosen_ind - 1])  # 非 padding的last token reward
@@ -130,4 +131,5 @@ class RewardModel(nn.Module):
             if diff > 0.5:
                 acc += 1
             return {"loss": - loss, "acc": acc, "chosen_mean_score": chosen_mean_score,
-                    "rejected_mean_score": rejected_mean_score, "used_chosen_r": used_chosen_r, "used_rejected_r": used_rejected_r}
+                    "rejected_mean_score": rejected_mean_score, "used_chosen_r": used_chosen_r,
+                    "used_rejected_r": used_rejected_r}
