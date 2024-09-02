@@ -38,3 +38,7 @@ torchrun --nnodes=2 --nproc_per_node=4 --node_rank=0 --master_addr="0.0.0.0" --m
 NPROC_PER_NODE=4 \
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
   python train_rewardmodel.py
+
+
+# dp（nn.DataParallel） 和 ddp（torch.nn.parallel.DistributedDataParallel）的区别
+# 数据集的切分，后者需要结合distributed sampler来使用，前者不需要。后者效率更高

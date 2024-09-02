@@ -1,4 +1,5 @@
 # encoding: utf-8
+# ddp分布式训练模型
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 import torch
@@ -9,17 +10,24 @@ from config.arguments import parser
 from model.rewardmodel import RewardModel
 from config.rewardmodel_config import RewardModel_Config
 from data.rewardmodel_dataset import RW_Dataset
-from torch.utils.data import RandomSampler, DataLoader
+from torch.utils.data import DistributedSampler, DataLoader
 from optim.adamw import AdamWeightDecayOptimizer
 from optim.sgd import SGD
 from utils.common_utils import save_model_partweight
+import os
+import torch.distributed as dist
 import torch.nn as nn
+
+local_rank = int(os.environ["LOCAL_RANK"])  # torchrun传过来的运行卡id
+print(f'local_rank: {local_rank}')
+torch.cuda.set_device(local_rank)  # 设置当前卡id
+dist.init_process_group(backend="nccl")  # 初始化分布式训练环境
 
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
     eval_data = dataprocess.load_data(config.evaldata_path)
     eval_dataset = RW_Dataset(eval_data, tokenizer, config)
-    eval_datasampler = RandomSampler(eval_dataset)
+    eval_datasampler = DistributedSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,
                                  batch_size=config.per_device_train_batch_size,
                                  collate_fn=eval_dataset.collate_wrapper)
@@ -45,8 +53,9 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
 
 def train_rewardmodel(config):
     traindata = dataprocess.load_data(config.traindata_path)
-
-    device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
+    device = torch.device(
+        ("cuda", local_rank) if torch.cuda.is_available() and config.use_cuda else "cpu")  # 当前local rank对应的卡
+    config.device = device
     device_cnt = torch.cuda.device_count()
     print(f"device_cnt: {device_cnt}")
     print(f"device: {device}")
@@ -54,8 +63,10 @@ def train_rewardmodel(config):
     model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     model.to(device)
+    model = nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
     rewardmodel = RewardModel(tokenizer, model)
     rewardmodel.to(device)
+    rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
 
     global_step = 0
     restore_step = 50
@@ -95,10 +106,11 @@ def train_rewardmodel(config):
 
     while global_step < config.global_step:
         train_dataset = RW_Dataset(traindata, tokenizer, config)
-        train_datasampler = RandomSampler(train_dataset)
+        train_datasampler = DistributedSampler(train_dataset)  # 将数据集切分后分给每张卡
         train_dataloader = DataLoader(train_dataset, sampler=train_datasampler,
                                       batch_size=config.per_device_train_batch_size,
                                       collate_fn=train_dataset.collate_wrapper)
+        train_dataloader.sampler.set_epoch(global_step) # 相当于sampler的seed，保证不同卡上的seed一致
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
             train_cnt += len(batch["input_ids"]) // 2
@@ -124,7 +136,7 @@ def train_rewardmodel(config):
                 global_step += 1
             # print(f"key: {rewardmodel.state_dict().keys()}")
 
-            if global_step % restore_step == 0:
+            if global_step % restore_step == 0 & local_rank ==0: # 只在rank=0的卡上进行weight restore
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
@@ -147,7 +159,7 @@ if __name__ == '__main__':
     # print(transformers.__version__)
     train_rewardmodel(config)
     # traindata = dataprocess.load_data(config.traindata_path)
-    # 
+    #
     # device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
     # model = AutoModel.from_pretrained(config.model_path)
     # tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
