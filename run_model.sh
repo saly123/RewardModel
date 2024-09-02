@@ -1,4 +1,2 @@
 # bin/bash
-export num_proc_per_node=4
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-python train_rewardmodel.py
+torchrun --nnodes=2 --nproc_per_node=4 --node_rank=0 --master_addr="0.0.0.0" --master_port=8000 train_rewardmodel.py
