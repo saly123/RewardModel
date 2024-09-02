@@ -13,7 +13,7 @@ class RewardModel_Config(object):
         self.traindata_path = "/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl"
         self.evaldata_path = "/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl"
         self.global_step = 3000
-        self.use_cuda = False
+        self.use_cuda = True
         self.optimizer_method = "AdamWeightDecayOptimizer"
         self.weigth_decay_rate = 0.01
         self.device = "cpu"
