@@ -45,15 +45,24 @@ class RewardModel(nn.Module):
         # 
         # print(f'input_ids shape: {input_ids.shape}')
         # print(f'attention_mask shape: {attention_mask.shape}')
+        print(f'forward model device: {self.model.device}')
+        print(f'reward model device: {self.reward_model.device}')
 
+        from datetime import datetime
+        start = datetime.now()
         transformer_outputs = self.model(input_ids, attention_mask=attention_mask,
                                          inputs_embeds=inputs_embeds,
                                          use_cache=use_cache)  # qwen2 model没有入参past_key_value
+        print(f'forward model time: {datetime.now() - start}')
         # bts × seq_len × hidden_size
         hidden_states = transformer_outputs[0]  # 只取模型的hidden_states，past_key_value先不取
         # bts*seq_len*1 ==> bts*seq_len（每一个token都有一个reward值）
+
+        start = datetime.now()
         rewards = self.reward_model(hidden_states).squeeze(
             -1)  # 移除tensor最后一个维度（如果最后一个维度的shape=1，则直接移除；如果不是1，则不改变原来的tensor）
+
+        print(f'reward model time: {datetime.now() - start}')
 
         chosen_mean_score = []
         rejected_mean_score = []
@@ -66,6 +75,9 @@ class RewardModel(nn.Module):
         rejected_ids = input_ids[bs:]
         chosen_rewards = rewards[:bs]
         rejected_rewards = rewards[bs:]
+
+        print(f'reward device: {rewards.device}')
+        print(f'input_ids device: {input_ids.device}')
 
         # 计算rejected和chosen的pairwise loss ——只对padding之前的chosen和rejected的不同token 计算loss 用于backpropagation
 

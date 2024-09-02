@@ -99,6 +99,8 @@ def train_rewardmodel(config):
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
             train_cnt += len(batch["input_ids"])//2
+            from datetime import now
+
             result = rewardmodel(**batch)
             loss = result["loss"]
             loss.backward()
