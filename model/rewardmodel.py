@@ -45,8 +45,8 @@ class RewardModel(nn.Module):
         # 
         # print(f'input_ids shape: {input_ids.shape}')
         # print(f'attention_mask shape: {attention_mask.shape}')
-        print(f'forward model device: {self.model.device}')
-        print(f'reward model device: {self.reward_model.device}')
+        # print(f'forward model device: {self.model.device}')
+        # print(f'reward model device: {self.reward_model.device}')
 
         from datetime import datetime
         start = datetime.now()
