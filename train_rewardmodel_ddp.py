@@ -53,8 +53,7 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
 
 def train_rewardmodel(config):
     traindata = dataprocess.load_data(config.traindata_path)
-    device = torch.device(
-        "cuda", local_rank if torch.cuda.is_available() and config.use_cuda else "cpu")  # 当前local rank对应的卡
+    device = torch.device("cuda", local_rank) if torch.cuda.is_available() and config.use_cuda else torch.device("cpu")  # 当前local rank对应的卡
     config.device = device
     device_cnt = torch.cuda.device_count()
     print(f"device_cnt: {device_cnt}")
