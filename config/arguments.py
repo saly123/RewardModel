@@ -18,7 +18,7 @@ parser.add_argument("--global_step", type=int, default=3000)
 parser.add_argument("--use_cuda", type=bool, default=True)
 parser.add_argument("--optimizer_method", type=str, default="AdamWeightDecayOptimizer")
 parser.add_argument("--weigth_decay_rate", type=float, default=0.01)
-parser.add_argument("--device", type=str, default="cpu")
+parser.add_argument("--device", type=str, default="cuda")
 parser.add_argument("--max_length", type=int, default=4096)
 
 parser.add_argument("--output_dir", type=str, default="/ll_dev/reward_model/rewardmodel_checkpoint")

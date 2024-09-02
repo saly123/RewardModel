@@ -46,6 +46,7 @@ def train_rewardmodel(config):
     traindata = dataprocess.load_data(config.traindata_path)
 
     device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
+    print(f"device: {device}")
     print(f"config.model_path: {config.model_path}")
     model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
