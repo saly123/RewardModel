@@ -9,10 +9,11 @@ from config.arguments import parser
 from model.rewardmodel import RewardModel
 from config.rewardmodel_config import RewardModel_Config
 from data.rewardmodel_dataset import RW_Dataset
-from torch.utils.data import RandomSampler, DataLoader
+from torch.utils.data import RandomSampler, DataLoader, DistributedSampler
 from optim.adamw import AdamWeightDecayOptimizer
 from optim.sgd import SGD
 from utils.common_utils import save_model_partweight
+import torch.nn as nn
 
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
@@ -53,8 +54,12 @@ def train_rewardmodel(config):
     print(f"config.model_path: {config.model_path}")
     model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
+    if device_cnt > 1:
+        model = nn.DataParallel(model)
     model.to(device)
     rewardmodel = RewardModel(tokenizer, model)
+    if device_cnt > 1:
+        rewardmodel = nn.DataParallel(rewardmodel)
     rewardmodel.to(device)
 
     global_step = 0
@@ -95,13 +100,14 @@ def train_rewardmodel(config):
 
     while global_step < config.global_step:
         train_dataset = RW_Dataset(traindata, tokenizer, config)
-        train_datasampler = RandomSampler(train_dataset)
+        # train_datasampler = RandomSampler(train_dataset)
+        train_datasampler = DistributedSampler(train_dataset) # 多卡
         train_dataloader = DataLoader(train_dataset, sampler=train_datasampler,
                                       batch_size=config.per_device_train_batch_size,
                                       collate_fn=train_dataset.collate_wrapper)
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
-            train_cnt += len(batch["input_ids"])//2
+            train_cnt += len(batch["input_ids"]) // 2
             from datetime import datetime
             start = datetime.now()
             result = rewardmodel(**batch)
