@@ -17,6 +17,7 @@ class RewardModel(nn.Module):
         super().__init__()
         self.tokenizer = tokenizer
         self.model = basemodel
+        print(f'base model device: {self.model.device}')
         self.config = basemodel.config
         self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
