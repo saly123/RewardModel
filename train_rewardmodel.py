@@ -111,21 +111,21 @@ def train_rewardmodel(config):
             print(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
-            if local_step % config.gradient_accumulation_steps == 1:
+            if local_step % config.gradient_accumulation_steps == 0:
                 optimizer.step()
                 optimizer.zero_grad()
                 local_step = 0
                 global_step += 1
             # print(f"key: {rewardmodel.state_dict().keys()}")
 
-            if global_step % restore_step == 1:
+            if global_step % restore_step == 0:
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
 
-            if global_step % evaluate_step == 1:
+            if global_step % evaluate_step == 0:
                 # evaluate
                 evaluate_rewardmodel(config, rewardmodel, tokenizer, global_step)
 

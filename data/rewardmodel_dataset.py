@@ -53,6 +53,9 @@ class RW_Dataset(Dataset):
         reject_list = []
         reject_attention_mask = []
         oridata_list = []
+        from datetime import datetime
+
+        now = datetime.now()
 
         for data in batch:
             chosen_text = data["query"] + "输出是："+data["response"]
@@ -74,8 +77,14 @@ class RW_Dataset(Dataset):
         #         "reject_input": torch.as_tensor(reject_list, dtype=torch.long),
         #         "reject_mask": torch.as_tensor(reject_attention_mask, dtype=torch.long)}
 
+        end = datetime.now()
+        print(f'process batch time: {end-now}')
         input_tensor = torch.cat(
             (torch.as_tensor(chosen_list, dtype=torch.long), torch.as_tensor(reject_list, dtype=torch.long)), dim=0)
         input_mask = torch.cat((torch.as_tensor(chosen_attention_mask, dtype=torch.long),
                                 torch.as_tensor(reject_attention_mask, dtype=torch.long)), dim=0)
+
+        print(f'concat time: {datetime.now() - end}')
+
+
         return {"input_ids": input_tensor.to(self.config.device), "attention_mask": input_mask.to(self.config.device)}
