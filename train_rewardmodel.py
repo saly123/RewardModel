@@ -46,6 +46,8 @@ def train_rewardmodel(config):
     traindata = dataprocess.load_data(config.traindata_path)
 
     device = torch.device("cuda" if torch.cuda.is_available() and config.use_cuda else "cpu")
+    device_cnt = torch.cuda.device_count()
+    print(f"device_cnt: {device_cnt}")
     print(f"device: {device}")
     config.device = device
     print(f"config.model_path: {config.model_path}")
