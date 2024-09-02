@@ -35,6 +35,7 @@ class RewardModel(nn.Module):
         '''
         past_key_value: 记录之前时间步的key和value，在处理较长序列或者是将模型应用到文本生成任务的时候，可以提高计算效率
         use_cache = True：等价于禁用gradient checkpoint
+        past_key_value: transformers版本有更新，新的参数是Cache(tuple)
 
         '''
         loss = None
