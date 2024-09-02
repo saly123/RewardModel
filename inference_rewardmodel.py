@@ -43,7 +43,7 @@ if __name__ == '__main__':
     config = RewardModel_Config()
     basemodel = AutoModel.from_pretrained(config.model_path)
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
-    rewardmodel = RewardModel(tokenizer, basemodel)
+    rewardmodel = RewardModel(tokenizer, basemodel, config)
     restore_partweight_from_checkpoint(rewardmodel, config, config.inference_checkpint)
 
     inference_datapath = config.evaldata_path
