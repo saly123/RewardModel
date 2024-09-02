@@ -11,6 +11,8 @@ import torch
 
 def inference(datapath, reward_model):
     eval_data = dataprocess.load_data(datapath)
+    eval_data = eval_data[:1]
+
     eval_dataset = RW_Dataset(eval_data, tokenizer, config)
     eval_datasampler = RandomSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,
@@ -28,10 +30,12 @@ def inference(datapath, reward_model):
             acc = result["acc"]
             eval_loss += loss
             eval_acc += acc
-            eval_num += len(batch["input_ids"])
-            break
+            eval_num += len(batch["input_ids"]) // 2
+            chosen_reward = result["used_chosen_r"]
+            reject_reward = result["used_rejected_r"]
         print(
             f"===============eval data, eval data size: {eval_num}, eval data loss: {eval_loss / eval_num}, eval data acc: {eval_acc / eval_num}")
+        print(f"================chosen_reward: {chosen_reward}, reject_reward: {reject_reward}")
 
 
 if __name__ == '__main__':

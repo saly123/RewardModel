@@ -127,4 +127,4 @@ class RewardModel(nn.Module):
             if diff > 0.5:
                 acc += 1
             return {"loss": - loss, "acc": acc, "chosen_mean_score": chosen_mean_score,
-                    "rejected_mean_score": rejected_mean_score}
+                    "rejected_mean_score": rejected_mean_score, "used_chosen_r": used_chosen_r, "used_rejected_r": used_rejected_r}
