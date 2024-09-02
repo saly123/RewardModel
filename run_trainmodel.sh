@@ -41,4 +41,4 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
 
 
 # dp（nn.DataParallel） 和 ddp（torch.nn.parallel.DistributedDataParallel）的区别
-# 数据集的切分，后者需要结合distributed sampler来使用，前者不需要。后者效率更高
+# 数据集的切分，后者需要结合distributed sampler来使用，前者不需要。后者效率更高（后者的数据集通过distributedsampler直接进行切分），前者是一一个batch的数据切分到不同卡上，会多了一些通信开销。

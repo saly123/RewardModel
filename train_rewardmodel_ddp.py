@@ -53,7 +53,8 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
 
 def train_rewardmodel(config):
     traindata = dataprocess.load_data(config.traindata_path)
-    device = torch.device("cuda", local_rank) if torch.cuda.is_available() and config.use_cuda else torch.device("cpu")  # 当前local rank对应的卡
+    device = torch.device("cuda", local_rank) if torch.cuda.is_available() and config.use_cuda else torch.device(
+        "cpu")  # 当前local rank对应的卡
     config.device = device
     device_cnt = torch.cuda.device_count()
     print(f"device_cnt: {device_cnt}")
@@ -63,7 +64,7 @@ def train_rewardmodel(config):
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     model.to(device)
     model = nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
-    rewardmodel = RewardModel(tokenizer, model)
+    rewardmodel = RewardModel(tokenizer, model, config)
     rewardmodel.to(device)
     rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
 
@@ -109,7 +110,7 @@ def train_rewardmodel(config):
         train_dataloader = DataLoader(train_dataset, sampler=train_datasampler,
                                       batch_size=config.per_device_train_batch_size,
                                       collate_fn=train_dataset.collate_wrapper)
-        train_dataloader.sampler.set_epoch(global_step) # 相当于sampler的seed，保证不同卡上的seed一致
+        train_dataloader.sampler.set_epoch(global_step)  # 相当于sampler的seed，保证不同卡上的seed一致
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
             train_cnt += len(batch["input_ids"]) // 2
@@ -135,7 +136,7 @@ def train_rewardmodel(config):
                 global_step += 1
             # print(f"key: {rewardmodel.state_dict().keys()}")
 
-            if global_step % restore_step == 0 & local_rank ==0: # 只在rank=0的卡上进行weight restore
+            if global_step % restore_step == 0 & local_rank == 0:  # 只在rank=0的卡上进行weight restore
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
