@@ -101,7 +101,7 @@ def restore_partweight_from_checkpoint(model, config,  dir_checkpoint_pt):
         if k == load_pt_key:
             model_statedict[k] = state_dict
         else:
-            model_statedict[k] = basemodel_weight[k]
+            model_statedict[k] = basemodel_weight[k.replace("model.","")]
     model.load_state_dict(model_statedict)
 
 
