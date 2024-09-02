@@ -16,7 +16,7 @@ from utils.common_utils import save_model_partweight
 
 
 def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
-    eval_data = dataprocess.load_data(config.traindata_path)
+    eval_data = dataprocess.load_data(config.evaldata_path)
     eval_dataset = RW_Dataset(eval_data, tokenizer, config)
     eval_datasampler = RandomSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,

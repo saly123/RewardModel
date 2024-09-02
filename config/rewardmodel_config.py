@@ -23,6 +23,8 @@ class RewardModel_Config(object):
         self.max_save = 20
         self.type = "model"
         self.gradient_accumulation_steps = 2
+        self.inference_checkpint = "/home/powerop/work/reward_model/rewardmodel_checkpoint/train_rewardmodel20240829_globalstep_1_acc_0_cnt_4.pt"
+
 
 
     @classmethod
