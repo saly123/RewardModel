@@ -74,7 +74,7 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
     else:
         file_lists = []
 
-    file_lists.sort(key=lambda line: float(line.split()[1]), reverse=True)
+    file_lists.sort(key=lambda line: float(line.split()[1]), reverse=False)
     while len(file_lists) > max_save:
         file = file_lists.pop()
         try:
@@ -93,7 +93,7 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
 
 def restore_partweight_from_checkpoint(model, config, dir_checkpoint_pt):
     state_dict = torch.load(dir_checkpoint_pt)
-    load_pt_key = "reward_model.weight"
+    load_pt_key = "reward_model.weight" # 可能需要加module.
     basemodel = AutoModel.from_pretrained(config.model_path)
     basemodel_weight = basemodel.state_dict()
     model_statedict = model.state_dict()
