@@ -74,7 +74,6 @@ def train_rewardmodel(config):
     rewardmodel = RewardModel(tokenizer, model, config)
     rewardmodel.to(device)
 
-
     global_step = 0
     restore_step = 50
     evaluate_step = 50
@@ -135,9 +134,9 @@ def train_rewardmodel(config):
             local_step += 1
 
             logging.info(
-                f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
+                f"=================local rank:{local_rank}, global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
             print(
-                f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
+                f"=================local rank: {local_rank}, global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
 
             # 显存回收
             del loss
@@ -150,12 +149,14 @@ def train_rewardmodel(config):
                 local_step = 0
                 global_step += 1
             # print(f"key: {rewardmodel.state_dict().keys()}")
-
-            if global_step % restore_step == 1 & local_rank == 0:  # 只在rank=0的卡上进行weight restore
-                print(f"key: {rewardmodel.state_dict().keys()}")
+            # 多卡运行，weight的key值会带卡的编号
+            print(f"key: {rewardmodel.state_dict().keys()}")
+            if global_step % restore_step == 1 & torch.distributed.get_rank() == 0:  # 只在rank=0的卡上进行weight restore
+                print(f"if clause key: {rewardmodel.state_dict().keys()}")
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
-                                      file_name=config.file_name + now_str + "_globalstep_" + str(global_step) + "_acc_" + str(
+                                      file_name=config.file_name + now_str + "_globalstep_" + str(
+                                          global_step) + "_acc_" + str(
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
 
