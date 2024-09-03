@@ -6,8 +6,8 @@ parser = ArgumentParser()
 parser.add_argument("--model_path", type=str, default="/ll_dev/qwen/Qwen2-7B-Instruct")
 
 parser.add_argument("--learning_rate", type=float, default=5e-4)
-parser.add_argument("--per_device_train_batch_size", type=int, default=16)
-parser.add_argument("--per_device_eval_batch_size", type=int, default=16)
+parser.add_argument("--per_device_train_batch_size", type=int, default=4)
+parser.add_argument("--per_device_eval_batch_size", type=int, default=4)
 # parser.add_argument("--traindata_path", type=str, default="/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl")
 # parser.add_argument("--evaldata_path", type=str, default="/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl")
 
