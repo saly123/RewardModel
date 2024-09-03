@@ -8,8 +8,8 @@ class RewardModel_Config(object):
         self.specidal_tokens = ""
         self.tokenizer = None
         self.learning_rate = 5e-4
-        self.per_device_train_batch_size = 4
-        self.per_device_eval_batch_size = 4
+        self.per_device_train_batch_size = 16
+        self.per_device_eval_batch_size = 16
         self.traindata_path = "/home/powerop/work/business_rlhf/traindata_dpo_20240828.jsonl"
         self.evaldata_path = "/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl"
         self.global_step = 3000
@@ -22,7 +22,7 @@ class RewardModel_Config(object):
         self.file_name = "train_rewardmodel20240829"
         self.max_save = 20
         self.type = "model"
-        self.gradient_accumulation_steps = 2
+        self.gradient_accumulation_steps = 1
         self.inference_checkpint = "/home/powerop/work/reward_model/rewardmodel_checkpoint/train_rewardmodel20240829_globalstep_1_acc_0_cnt_4.pt"
         self.hidden_size = 3584
 
