@@ -48,7 +48,7 @@ class RW_Dataset(Dataset):
         return input_tensor
 
     def __convert_token_hidden_state__(self, chosen_token, chosen_atten_mask, reject_token, reject_atten_mask):
-        if chosen_token == reject_token:
+        if torch.equal(chosen_token, reject_token):
             return None
         seq_len = chosen_token.shape[-1]
 
