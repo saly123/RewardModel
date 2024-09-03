@@ -31,8 +31,8 @@ class RW_Dataset(Dataset):
         )
         return {
             'ori_data': text,
-            'input_ids': inputs.input_ids.to(self.config.device),
-            'attention_mask': inputs.attention_mask.to(self.config.device)
+            'input_ids': torch.as_tensor(inputs.input_ids, dtype=torch.long).to(self.config.device),
+            'attention_mask': torch.as_tensor(inputs.attention_mask, dtype=torch.long).to(self.config.device)
         }
 
     def __convert_inputid(self, chosen_list, reject_list, chosen_attention_mask, reject_attention_mask):
@@ -104,6 +104,7 @@ class RW_Dataset(Dataset):
 
             # encode_start = datetime.now()
 
+            # tensor
             chosen_id = self.__encode_token__(chosen_text)["input_ids"]
             chosen_mask = self.__encode_token__(chosen_text)["attention_mask"]
 
