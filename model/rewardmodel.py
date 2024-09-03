@@ -17,7 +17,8 @@ class RewardModel(nn.Module):
         super().__init__()
         self.tokenizer = tokenizer
         self.model = basemodel
-        print(f'base model device: {self.model.device}')
+        self.model.to(config.device)
+        # print(f'base model device: {self.model.device}')
         self.config = config
         self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
@@ -56,6 +57,7 @@ class RewardModel(nn.Module):
                                          use_cache=use_cache)  # qwen2 model没有入参past_key_value
         print(f'forward model time: {datetime.now() - start}')
         # bts × seq_len × hidden_size
+        # to device加速
         hidden_states = transformer_outputs[0].to(self.config.device)  # 只取模型的hidden_states，past_key_value先不取
         # bts*seq_len*1 ==> bts*seq_len（每一个token都有一个reward值）
 
