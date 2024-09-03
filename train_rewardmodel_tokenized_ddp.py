@@ -118,7 +118,7 @@ def train_rewardmodel(config):
         train_dataloader.sampler.set_epoch(global_step)  # 相当于sampler的seed，保证不同卡上的seed一致
         for batch in tqdm(train_dataloader):
             rewardmodel.train()
-            train_cnt += len(batch["input_ids"]) // 2
+            train_cnt += len(batch["input_tensor"]) // 2
             from datetime import datetime
             start = datetime.now()
             result = rewardmodel(**batch)
