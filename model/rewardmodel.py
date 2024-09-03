@@ -21,7 +21,7 @@ class RewardModel(nn.Module):
         self.config = config
         self.num_padding_at_begining = num_padding_at_begining  # 在序列的开始处添加padding token的数量。
         self.compute_fp32_loss = compute_fp32_loss
-        self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False).to(self.model.device)  # [bts, hidden_size] => [bts, 1]
+        self.reward_model = nn.Linear(self.config.hidden_size, 1, bias=False).to(self.config.device)  # [bts, hidden_size] => [bts, 1]
         self.PAD_ID = tokenizer.pad_token_id
 
     # gradient checkpointing：一种节省显存的训练方式[但是会增加时间]——根据策略将计算图上的一部分激活值保存，其余部分丢弃。被保存的那部分在反向传播的时候可以直接使用，被丢弃的那部分在反向传播的时候就需要重新计算激活值
@@ -56,7 +56,7 @@ class RewardModel(nn.Module):
                                          use_cache=use_cache)  # qwen2 model没有入参past_key_value
         print(f'forward model time: {datetime.now() - start}')
         # bts × seq_len × hidden_size
-        hidden_states = transformer_outputs[0]  # 只取模型的hidden_states，past_key_value先不取
+        hidden_states = transformer_outputs[0].to(self.config.device)  # 只取模型的hidden_states，past_key_value先不取
         # bts*seq_len*1 ==> bts*seq_len（每一个token都有一个reward值）
 
         start = datetime.now()
