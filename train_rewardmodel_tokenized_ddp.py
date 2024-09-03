@@ -43,7 +43,7 @@ def evaluate_rewardmodel(config, basemodel, reward_model, tokenizer, global_step
             acc = result["acc"]
             eval_loss += loss
             eval_acc += acc
-            eval_num += len(batch["input_ids"])
+            eval_num += len(batch["input_tensor"])
             del loss
             torch.cuda.empty_cache()
             gc.collect()
