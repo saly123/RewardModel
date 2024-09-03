@@ -4,7 +4,7 @@ from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 import torch
 import logging
-
+import gc
 from utils import dataprocess
 from config.arguments import parser
 from model.rewardmodel import RewardModel
@@ -44,6 +44,9 @@ def evaluate_rewardmodel(config, reward_model, tokenizer, global_step):
             eval_loss += loss
             eval_acc += acc
             eval_num += len(batch["input_ids"])
+            del loss
+            torch.cuda.empty_cache()
+            gc.collect()
 
         logging.info(
             f"===============eval data, global step: {global_step}, eval data size: {eval_num}, eval data loss: {eval_loss / eval_num}, eval data acc: {eval_acc / eval_num}")
@@ -128,6 +131,11 @@ def train_rewardmodel(config):
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
             print(
                 f"=================global step: {global_step}, train loss: {train_loss / train_cnt}, train acc: {train_acc / train_cnt}")
+
+            # 显存回收
+            del loss
+            torch.cuda.empty_cache()
+            gc.collect()
 
             if local_step % config.gradient_accumulation_steps == 0:
                 optimizer.step()
