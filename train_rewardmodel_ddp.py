@@ -151,7 +151,7 @@ def train_rewardmodel(config):
             # print(f"key: {rewardmodel.state_dict().keys()}")
             # 多卡运行，weight的key值会带卡的编号
             # print(f"key: {rewardmodel.state_dict().keys()}")
-            if global_step % restore_step == 1 and local_rank == 1:  # 只在rank=0的卡上进行weight restore
+            if global_step % restore_step == 1 and local_rank == 0:  # 只在rank=0的卡上进行weight restore
                 # print(f"if clause key: {rewardmodel.state_dict().keys()}")
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="module.reward_model.weight",
@@ -160,7 +160,7 @@ def train_rewardmodel(config):
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
 
-            if global_step % evaluate_step == 0:
+            if global_step % evaluate_step == 1:
                 # evaluate
                 evaluate_rewardmodel(config, rewardmodel, tokenizer, global_step)
 

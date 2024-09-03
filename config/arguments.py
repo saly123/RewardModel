@@ -12,7 +12,7 @@ parser.add_argument("--per_device_eval_batch_size", type=int, default=8)
 # parser.add_argument("--evaldata_path", type=str, default="/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl")
 
 parser.add_argument("--traindata_path", type=str, default="/ll_dev/data/traindata_dpo_20240828.jsonl")
-parser.add_argument("--evaldata_path", type=str, default="/ll_dev/data/qwen2_72B_91_badcase.jsonl")
+parser.add_argument("--evaldata_path", type=str, default="/ll_dev/data/val91_traindata_dpo_20240828.jsonl")
 
 parser.add_argument("--global_step", type=int, default=3000)
 parser.add_argument("--use_cuda", type=bool, default=True)
