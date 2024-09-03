@@ -65,8 +65,8 @@ def train_rewardmodel(config):
     print(f"config.model_path: {config.model_path}")
     model = AutoModel.from_pretrained(config.model_path)  # base model
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
-    model.to(device)
-    model = nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
+    # model.to(device)
+    # model = nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
     rewardmodel = RewardModel(tokenizer, model, config)
     rewardmodel.to(device)
     rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
