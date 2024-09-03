@@ -26,7 +26,7 @@ dist.init_process_group(backend="nccl")  # 初始化分布式训练环境
 
 def evaluate_rewardmodel(config, basemodel, reward_model, tokenizer, global_step):
     eval_data = dataprocess.load_data(config.evaldata_path)
-    eval_dataset = RW_Dataset(eval_data, tokenizer, basemodel, config)
+    eval_dataset = RW_Dataset(eval_data, tokenizer, basemodel, config, num_padding_at_begining=0)
     eval_datasampler = DistributedSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,
                                  batch_size=config.per_device_train_batch_size,
@@ -110,7 +110,7 @@ def train_rewardmodel(config):
     local_step = 0
 
     while global_step < config.global_step:
-        train_dataset = RW_Dataset(traindata, tokenizer, model, config)
+        train_dataset = RW_Dataset(traindata, tokenizer, model, config, num_padding_at_begining=0)
         train_datasampler = DistributedSampler(train_dataset)  # 将数据集切分后分给每张卡
         train_dataloader = DataLoader(train_dataset, sampler=train_datasampler,
                                       batch_size=config.per_device_train_batch_size,
