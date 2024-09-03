@@ -1,0 +1,5 @@
+1、reward model
+
+2、dpo
+
+swift dpo推理：

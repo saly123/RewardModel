@@ -17,6 +17,10 @@ from utils.common_utils import save_model_partweight
 import os
 import torch.distributed as dist
 import torch.nn as nn
+from datetime import datetime
+
+now = datetime.now()
+now_str = str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute) + str(now.second)
 
 local_rank = int(os.environ["LOCAL_RANK"])  # torchrun传过来的运行卡id
 print(f'local_rank: {local_rank}')
@@ -151,7 +155,7 @@ def train_rewardmodel(config):
                 print(f"key: {rewardmodel.state_dict().keys()}")
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
-                                      file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(
+                                      file_name=config.file_name + now_str + "_globalstep_" + str(global_step) + "_acc_" + str(
                                           train_acc) + "_cnt_" + str(train_cnt) + ".pt", metric=train_loss / train_cnt,
                                       max_save=config.max_save, type=config.type)
 
