@@ -83,6 +83,7 @@ def train_rewardmodel(config):
         if name != "reward_model.weight":
             param.requires_grad = False
 
+    # parallel放到requires_grad之后，放在前面的话，requires_grad会失效？
     rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
 
     optimizer_grouped_parameters = [
