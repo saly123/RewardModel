@@ -84,6 +84,8 @@ class RewardModel(nn.Module):
 
         # 计算rejected和chosen的pairwise loss ——只对padding之前的chosen和rejected的不同token 计算loss 用于backpropagation
 
+
+        # 下面的代码耗时较长，建议优化到dataset！！
         loss = 0.
         acc = 0
         # 这部分可以挪到dataset中，collate中直接将truncate之后一样的删除掉！！
