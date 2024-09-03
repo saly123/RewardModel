@@ -147,7 +147,8 @@ def train_rewardmodel(config):
                 global_step += 1
             # print(f"key: {rewardmodel.state_dict().keys()}")
 
-            if global_step % restore_step == 0 & local_rank == 0:  # 只在rank=0的卡上进行weight restore
+            if global_step % restore_step == 1 & local_rank == 0:  # 只在rank=0的卡上进行weight restore
+                print(f"key: {rewardmodel.state_dict().keys()}")
                 # save model
                 save_model_partweight(config.output_dir, rewardmodel, weight_key="reward_model.weight",
                                       file_name=config.file_name + "_globalstep_" + str(global_step) + "_acc_" + str(

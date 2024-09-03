@@ -51,7 +51,7 @@ class RW_Dataset(Dataset):
         if torch.equal(chosen_token, reject_token):
             return None
         seq_len = chosen_token.shape[-1]
-
+        # oom
         chosen_hidden_state = self.model(chosen_token, attention_mask=chosen_atten_mask)[0].to(self.config.device)
         reject_hidden_state = self.model(reject_token, attention_mask=reject_atten_mask)[0].to(self.config.device)
         chosen_padding_ids = (chosen_token == self.PAD).nonzero()
