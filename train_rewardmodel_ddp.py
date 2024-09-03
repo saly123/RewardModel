@@ -69,7 +69,7 @@ def train_rewardmodel(config):
     # model = nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
     rewardmodel = RewardModel(tokenizer, model, config)
     rewardmodel.to(device)
-    rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
+
 
     global_step = 0
     restore_step = 50
@@ -82,6 +82,8 @@ def train_rewardmodel(config):
     for name, param in params:
         if name != "reward_model.weight":
             param.requires_grad = False
+
+    rewardmodel = nn.parallel.DistributedDataParallel(rewardmodel, device_ids=[local_rank], output_device=local_rank)
 
     optimizer_grouped_parameters = [
         {'params': [p for n, p in params if
