@@ -53,7 +53,7 @@ def test_tmpcase(reward_model):
                      'response': '{"FUNCTION":"get_hotel_bookedData","ARGS":"{"hotel_name": "", "beginDate": "2024-04-01", "endDate": "2024-04-07", "ota": "", "comparative": ""}"}',
                      'rejected_response': '{}'}]
     for i in range(len(test_data)):
-        eval_data = test_data[i]
+        eval_data = [test_data[i]]
         print(f'eval_data : {eval_data}')
 
         eval_dataset = RW_Dataset(eval_data, tokenizer, config)
