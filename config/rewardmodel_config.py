@@ -15,7 +15,7 @@ class RewardModel_Config(object):
         # self.evaldata_path = "/home/powerop/work/business_rlhf/val91_traindata_dpo_20240828.jsonl"
 
         self.traindata_path = "/ll_dev/data/traindata_dpo_20240828.jsonl"
-        self.evaldata_path = "/ll_dev/data/val91_traindata_dpo_20240828.jsonll"
+        self.evaldata_path = "/ll_dev/data/val91_traindata_dpo_20240828.jsonl"
 
         self.global_step = 3000
         self.use_cuda = True

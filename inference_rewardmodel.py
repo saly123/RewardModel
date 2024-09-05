@@ -11,7 +11,7 @@ import torch
 
 def inference(datapath, reward_model):
     eval_data = dataprocess.load_data(datapath)
-    eval_data = eval_data[:10]
+    eval_data = eval_data[:1]
     print(f'eval_data : {eval_data}')
 
     eval_dataset = RW_Dataset(eval_data, tokenizer, config)
