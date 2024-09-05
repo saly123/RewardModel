@@ -90,6 +90,7 @@ def test_tmpcase(reward_model):
 if __name__ == '__main__':
     config = RewardModel_Config()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    config.device = device
     basemodel = AutoModel.from_pretrained(config.model_path)
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     rewardmodel = RewardModel(tokenizer, basemodel, config)
