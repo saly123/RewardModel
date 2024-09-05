@@ -93,7 +93,7 @@ def save_model_partweight(output_dir, model, weight_key, file_name, metric, max_
 
 def restore_partweight_from_checkpoint(model, config, dir_checkpoint_pt):
     state_dict = torch.load(dir_checkpoint_pt)
-    load_pt_key = "reward_model.weight" # 可能需要加module.
+    load_pt_key = "reward_model.weight"  # 可能需要加module.
     basemodel = AutoModel.from_pretrained(config.model_path)
     basemodel_weight = basemodel.state_dict()
     model_statedict = model.state_dict()

@@ -28,6 +28,10 @@ parser.add_argument("--file_name", type=str, default="train_rewardmodel")
 parser.add_argument("--max_save", type=int, default=20)
 parser.add_argument("--type", type=str, default="model")
 parser.add_argument("--gradient_accumulation_steps", type=int, default=1)
+# parser.add_argument("--inference_checkpint", type=str,
+#                     default="/home/powerop/work/reward_model/rewardmodel_checkpoint/train_rewardmodel20240829_globalstep_1_acc_0_cnt_4.pt")
+
 parser.add_argument("--inference_checkpint", type=str,
-                    default="/home/powerop/work/reward_model/rewardmodel_checkpoint/train_rewardmodel20240829_globalstep_1_acc_0_cnt_4.pt")
+                    default="/ll_dev/reward_model/rewardmodel_checkpoint/train_rewardmodel20249320350_globalstep_2801_acc_0_cnt_22336.pt")
+
 parser.add_argument("--hidden_size", type=int, default=3584)
