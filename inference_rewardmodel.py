@@ -57,6 +57,7 @@ def test_tmpcase(reward_model):
         print(f'eval_data : {eval_data}')
 
         eval_dataset = RW_Dataset(eval_data, tokenizer, config)
+        print(f'device: {config.device}')
         eval_datasampler = RandomSampler(eval_dataset)
         eval_dataloader = DataLoader(eval_dataset, sampler=eval_datasampler,
                                      batch_size=config.per_device_train_batch_size,
@@ -88,10 +89,12 @@ def test_tmpcase(reward_model):
 
 if __name__ == '__main__':
     config = RewardModel_Config()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     basemodel = AutoModel.from_pretrained(config.model_path)
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, use_fast=True, padding_side="right")
     rewardmodel = RewardModel(tokenizer, basemodel, config)
     restore_partweight_from_checkpoint(rewardmodel, config, config.inference_checkpint)
+    rewardmodel.to(device)
 
     inference_datapath = config.evaldata_path
 
