@@ -3,6 +3,10 @@
 2）临时case推理：
 chosen_text = data["query"] + "输出是：" + data["response"]
 reject_text = data["query"] + "输出是：" + data["rejected_response"]
+chosen reward 最后一个token的reward score
+reject reward  最后一个token的reward score
+chosen score_avg/sum  所有response sigmoid(reward) avg/sum
+reject score_avg/sum  所有response sigmoid(reward) avg/sum
 
 [I] 最近一周
 a）正确case
@@ -61,6 +65,15 @@ reject reward: [tensor(1.6050, device='cuda:0')]
 析出有效日期实体，请用空字符串填充。能提取出有效时间实体，必须填���时间参数，如果时间实体不是绝对时间格式，请根据当前日期转换成绝对时间格式，绝对时间格式如果没有明确，请统一用yyyy-MM-dd格式。请直接以json格式输出{"FUNCTION":xx,"ARGS":xx}，请严按照json格式输出，请严按照json格式输出，不要输出多余的解释。输入是：请查询哈尔滨富九短租公寓上个月的访问流量数据 ', 'response': '{"FUNCTION":"get_hotel_trafficData","ARGS":"{"hotel_name": "哈尔滨富九短租公寓", "beginDate": "", "endDate": ""}"}', 'rejected_response': '{}'}
 
 [III]上个季度
+a）正确case
+chosen reward: [tensor(0.7063, device='cuda:0')]
+reject reward: [tensor(2.9204, device='cuda:0')]
+b）错误case1
+chosen reward: [tensor(0.7797, device='cuda:0')]
+reject reward: [tensor(2.9204, device='cuda:0')]
+c）错误case2
+chosen reward: [tensor(0.7525, device='cuda:0')]
+reject reward: [tensor(2.9204, device='cuda:0')]
 
 
 【思考】可以用来拦截异常。

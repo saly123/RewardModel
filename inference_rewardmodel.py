@@ -86,16 +86,30 @@ def test_tmpcase(reward_model):
                 result = reward_model(**batch)
                 loss = result["loss"].item()
                 acc = result["acc"]
-                chosen_reward = result["chosen_mean_score"]
+                chosen_reward = result["chosen_mean_score"]  # last token reward score
                 reject_reward = result["rejected_mean_score"]
 
                 eval_loss += loss
                 eval_acc += acc
                 eval_num += len(batch["input_ids"]) // 2
-                # chosen_reward = result["used_chosen_r"]
-                # reject_reward = result["used_rejected_r"]
+                chosen_reward_r = result["used_chosen_r"]
+                reject_reward_r = result["used_rejected_r"]
+
+                chosen_reward_r_sigmoid = torch.sigmoid(torch.as_tensor(chosen_reward_r))
+                reject_reward_r_sigmoid = torch.sigmoid(torch.as_tensor(reject_reward_r))
+                print(f'chosen_reward_r_sigmoid: {chosen_reward_r_sigmoid}')
+                print(f'reject_reward_r_sigmoid: {reject_reward_r_sigmoid}')
+
+                print(f'chosen_reward_r_sigmoid_avg: {torch.mean(chosen_reward_r_sigmoid)}')
+                print(f'reject_reward_r_sigmoid_avg: {torch.mean(reject_reward_r_sigmoid)}')
+
+                print(f'chosen_reward_r_sigmoid_sum: {torch.sum(chosen_reward_r_sigmoid)}')
+                print(f'reject_reward_r_sigmoid_sum: {torch.sum(reject_reward_r_sigmoid)}')
+
                 print(f'chosen reward: {chosen_reward}')
                 print(f'reject reward: {reject_reward}')
+                print(f'chosen reward_r: {chosen_reward_r}')
+                print(f'reject reward_r: {reject_reward_r}')
             print(
                 f"===============eval data, eval data size: {eval_num}, eval data loss: {eval_loss / eval_num}, eval data acc: {eval_acc / eval_num}")
             print(f"================chosen_reward: {chosen_reward}, reject_reward: {reject_reward}")
